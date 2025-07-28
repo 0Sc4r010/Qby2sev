@@ -1,0 +1,15 @@
+# Ignorar archivos compilados de Python
+*.pyc
+__pycache__/
+
+# Entorno virtual
+tick2sevenv/
+TICK2SEV/
+.tick2sev/
+.TICK2SEV/
+
+# Configuraciones de VSCode
+.vscode/
+
+# Logs
+*.log
