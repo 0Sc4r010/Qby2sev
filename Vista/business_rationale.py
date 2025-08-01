@@ -178,7 +178,7 @@ def insertar_encabezado_fc(row,proceso_global):
 
             try:
                 retorno = 0
-                Ctaxcobrar = receivable_consultation(row['id_proyecto'], row['fac_cref'])
+                Ctaxcobrar = receivable_consultation(row['id_proyecto'], row['fac_cref']) 
                 if Ctaxcobrar and row['fac_tipo'] == 'F':
                     response = insertar_recuado(detalles_cursor, row['fac_fech'], row['cfl_codi'],row['fac_cref'])
                     retorno =  response['Retorno']

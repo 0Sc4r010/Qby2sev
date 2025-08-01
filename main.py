@@ -39,7 +39,7 @@ def invoicing_process(proceso_global):
         invoice_data = view_invoice_data_head(proceso_global,'H')
         if isinstance(invoice_data, list) and invoice_data:
             for row in invoice_data:
-                if row['payment'] == 'Efectivo':
+                if row['payment'] == 'Efectivo': 
                    insertar_encabezado_fc(row,proceso_global)
                 else:
                     min_cont = insertar_encabezado_in(row, proceso_global )
