@@ -202,8 +202,5 @@ def insertar_encabezado_fc(row,proceso_global):
     except Exception as e:
         logger.error(f"Error al procesar el encabezado de la factura para el registro: {row}", exc_info=True)
         
-if __name__ == "__main__":
-    result = view_invoice_data_head()
-    if isinstance(result, list) and result:
-        insertar_encabezado_fc(result, branch_id=0)
+
 

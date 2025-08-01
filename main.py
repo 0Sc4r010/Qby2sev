@@ -1,10 +1,11 @@
 import argparse
-from datetime import date
+from datetime import datetime
 from Vista.business_rationale import insertar_encabezado_fc
 from Vista.inventory_transactions import insertar_encabezado_in
 from Vista.accounting_transaction import insertar_encabezado_mc
 from Vista.create_client import procesar_customer_data
 from modelos.data_access import MSSQLConnectionManager, view_invoice_customer_data, view_invoice_data_head,process_tickes,clean_data
+from modelos.api_total import process_api
 import logging
 
 # logging.basicConfig(level=logging.INFO,
@@ -16,7 +17,6 @@ logging.basicConfig(level=logging.INFO,
                     ])
 logger = logging.getLogger(__name__)
 
-today_str = date.today().strftime('%Y-%m-%d')
 proceso_global = ''
 
 
@@ -39,14 +39,8 @@ def invoicing_process(proceso_global):
         invoice_data = view_invoice_data_head(proceso_global,'H')
         if isinstance(invoice_data, list) and invoice_data:
             for row in invoice_data:
-                if row['payment'] == 'Efectivo': 
                    insertar_encabezado_fc(row,proceso_global)
-                else:
-                    min_cont = insertar_encabezado_in(row, proceso_global )
-                    if min_cont is not None and min_cont > 0:
-                       insertar_encabezado_mc(row,proceso_global,min_cont,)
-                    else:
-                       logger.warning("Inventario no satisfactorio o producto en consignacion (min_cont = %s) para la fila: %s. No se ejecuta contabilización.", min_cont, row)
+             
     except Exception as e:
         print(f"An error occurred while processing invoice data: {e}")
 
@@ -70,7 +64,7 @@ def main():
             # proceso encargado de leer la vista (temporal) y cargar el repositorio de datos de tiquetes
             if  proceso_global == 'T' :
                 # clean_data(proceso_global) 
-                process_tickes(today_str)
+                pass # process_api(datetime.now())
                        
             process_customer_data(proceso_global) 
             invoicing_process(proceso_global) # procesa Movimientos

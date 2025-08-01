@@ -20,8 +20,8 @@ class MSSQLConnectionManager:
         if MSSQLConnectionManager._connection is None :
            try:
             # Credenciales de conexión a la Base
-              MSSQLConnectionManager._connection = pymssql.connect(server=r'172.18.200.14',user='seven',password="Gav:[Z3A@X7", database='seven', as_dict=True)  # Production
-              # MSSQLConnectionManager._connection = pymssql.connect(server=r'172.18.200.14\pruebas',user='seven', password = 'seven', database='seven_pruebas', as_dict=True) # testing
+              # MSSQLConnectionManager._connection = pymssql.connect(server=r'172.18.200.14',user='seven',password="Gav:[Z3A@X7", database='seven', as_dict=True)  # Production
+               MSSQLConnectionManager._connection = pymssql.connect(server=r'172.18.200.14\pruebas',user='seven', password = 'seven', database='seven_pruebas', as_dict=True) # testing
            except pymssql.DatabaseError as e:
               MSSQLConnectionManager._connection = None
               print(f"Error connecting to database: {e}")
@@ -71,23 +71,34 @@ def iif(condicion, valor_si_verdadero, valor_si_falso):
     return valor_si_verdadero if condicion else valor_si_falso
 
 
-def process_tickes(fecha):
-    """
-    The function `process_tickets` executes a stored procedure `sp_GetFacturacionElectronica` with a
-    given date parameter to retrieve electronic billing information.
+def process_tickes(row):
+    query = """EXEC sp_InsertarTiquete  @idEmpresa = %s, @idCompra = %s, @idBoleto = %s, @tipoTiquete = %s, @numeroTiquete = %s, 
+    @valorTiquete = %s, @precio = %s, @precio_pagado = %s, @precio_descuento = %s,@valorProducto = %s,@fechaDeVenta = %s,
+    @identificacionComprador1 = %s,@idPuntoVenta = %s,@nombresComprador = %s,@emailComprador = %s,@descripcionRutaPasajero = %s"""
     
-    :param fecha: The `process_tickets` function seems to be a Python function that is intended to
-    execute a stored procedure `sp_GetFacturacionElectronica` with a parameter `@FechaFactura` being
-    passed as input. The function then calls `execute_query` with the query and parameters to execute
-    the stored
-    :return: The function `process_tickes` is returning the result of executing a query using the
-    provided `fecha` parameter as the `@FechaFactura` value in a stored procedure
-    `sp_GetFacturacionElectronica`. The query is executed with the `fetch=False` parameter, which
-    indicates that the query result should not be fetched immediately.
-    """
-    query = "exec sp_GetFacturacionElectronica @FechaFactura=%s"
-    params = (fecha )
+    params = (
+             int(row.get("idEmpresa", 0)),
+             int(row.get("idCompra", 0)),
+             int(row.get("idBoleto", 0)),
+             str(row.get("tipoTiquete", "")) ,
+             str(row.get("numeroTiquete", "")) ,
+             float(row.get("valorTiquete", 0)),
+             float(row.get("precio", 0)),
+             float(row.get("precio_pagado", 0)),
+             float(row.get("precio_descuento", 0)),
+             float(row.get("valorProducto", 0)),
+             row.get("fechaDeVenta"),
+             str(row.get("identificacionComprador1", "")),
+             int(row.get("idPuntoVenta", 0)),
+             str(row.get("nombresComprador", "")),
+             str(row.get("emailComprador", "")),
+             str(row.get("descripcionRutaPasajero"))
+    )
+
     return execute_query(query,params,fetch=False)    
+
+
+
 
 
 def build_compr(fac_cont,emp_codi,branch_id,operacion,producto,valor,tercero,descrip,arb_codc,arb_codp,arb_coda,arb_cods,frmpago,Pcosto):
@@ -148,7 +159,7 @@ def valida_no_registro(empresa, fac_cref):
     params = (empresa, fac_cref)
     result = execute_query(query, params)
 
-    if result and result[0]['valida'] == 1:
+    if result and result[0]['valida'] == 1: # type: ignore
         return True
     else:
         return False
@@ -157,8 +168,8 @@ def validate_client(empresa,clicoda):
     query = "select count(*) as valida from FA_CLIEN  where CLI_CODA = %s  and  emp_codi = %s "
     params = (clicoda, empresa)
     result = execute_query(query,params)
-    for row in result :
-       return  iif(row['valida'] >= 1,False,True)
+    for row in result : # type: ignore
+       return  iif(row['valida'] >= 1,False,True) # type: ignore
  
  
 def calc_csto(empresa,invcont):
@@ -168,7 +179,7 @@ def calc_csto(empresa,invcont):
     if not result:
         return None
     else: 
-        return result[0]['VLR_COST']     
+        return result[0]['VLR_COST']      # type: ignore
  
  
  
@@ -179,7 +190,7 @@ def calc_total(empresa,faccont):
     if not result:
         return None
     else: 
-        return result[0]['LIQ_VALO']    
+        return result[0]['LIQ_VALO']     # type: ignore
  
     
 def find_pettycash(empresa,operacion):
@@ -189,7 +200,7 @@ def find_pettycash(empresa,operacion):
     if not result:
         return None
     else: 
-        return result[0]['caj_codi']    
+        return result[0]['caj_codi']     # type: ignore
     
 
 
@@ -216,7 +227,7 @@ def  updated_status(proceso,estado,factura, empresa):
 
 if __name__ == "__main__":
  #   print(view_invoice_data_head())
-    print(view_invoice_customer_data())
+    print(view_invoice_customer_data()) # type: ignore
 
 
 

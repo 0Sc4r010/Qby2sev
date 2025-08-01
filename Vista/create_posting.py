@@ -99,7 +99,7 @@ def prepare_ts_recaj_data(vDetalle, fecha_recaudo, cfl_codi,fac_cref):
                 'mte_nume': 0,
                 'mte_fech': fecha_recaudo.strftime('%Y%m%d'),  # Formato de fecha: YYYYMMDD
                 'arb_csuc': vDetalle[0]['sucursal'],
-                'mte_desc': Ctaxcobrar[0]['cxc_desc'],
+                'mte_desc': Ctaxcobrar[0]['cxc_desc'], # type: ignore
                 'ter_coda': vDetalle[0]['cli_coda'],
                 'cfl_codi': cfl_codi,
                 'mon_codi': 1,
@@ -144,17 +144,4 @@ def payment_collection(toTsRecaj_data):
     
         
         
-        
-
-if __name__ == "__main__":
-    # Preparar los datos del recibo de caja
-    toTsRecaj_data = prepare_ts_recaj_data()
-    
-    # Llamar al servicio web con los datos preparados
-    response = client.service.InsertarTsRecaj(toTsRecaj_data)
-    
-    # Registrar el resultado de la llamada al servicio web
-    logger.info(f"Response from InsertarTsRecaj: {response}")
-
-
-      
+ 

@@ -7,17 +7,25 @@ import xml.etree.ElementTree as ET
 from modelos.data_access import process_tickes
 
 
+def process_api(ahora): 
 
-def process_api(today_str): 
     # URL del API
     url = "http://integrabolivariano.rjconsultores.com.br/RJIntegra/rest/padrao/tiquetesVendidos"
-
-    # Parámetros de la consulta
+   
+    """
+        params = {
+        "idEmpresa": 1,
+        "fechaInicio": ahora.strftime("%y%m%d") + "0000",
+        "fechaFinalizacion": ahora.strftime("%y%m%d") + "2359"
+    }
+    """
     params = {
         "idEmpresa": 1,
         "fechaInicio": "2507280000",
         "fechaFinalizacion": "2507282359"
     }
+    
+    
 
     # Credenciales
     usuario = "bolivariano"
