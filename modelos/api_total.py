@@ -44,7 +44,13 @@ def process_api(ahora):
     # Extraer datos de <tiqueteVendido>
         tiquetes = []
         for elem in root.findall(".//tiqueteVendido"):
-            tiquete = {child.tag: child.text for child in elem}
+            tiquete = {}
+            for child in elem:
+                if child.tag == "formaDePagos":
+                   pago_dict = {sub.tag: sub.text for sub in child}
+                   tiquete["formaDePagos"] = pago_dict
+                else:
+                   tiquete[child.tag] = child.text
             tiquetes.append(tiquete)
         
         df = pd.DataFrame(tiquetes)

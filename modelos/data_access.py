@@ -76,6 +76,9 @@ def process_tickes(row):
     @valorTiquete = %s, @precio = %s, @precio_pagado = %s, @precio_descuento = %s,@valorProducto = %s,@fechaDeVenta = %s,
     @identificacionComprador1 = %s,@idPuntoVenta = %s,@nombresComprador = %s,@emailComprador = %s,@descripcionRutaPasajero = %s"""
     
+    forma_de_pagos = row.get("formaDePagos", [])
+    
+    
     params = (
              int(row.get("idEmpresa", 0)),
              int(row.get("idCompra", 0)),
@@ -83,7 +86,7 @@ def process_tickes(row):
              str(row.get("tipoTiquete", "")) ,
              str(row.get("numeroTiquete", "")) ,
              float(row.get("valorTiquete", 0)),
-             float(row.get("precio", 0)),
+             float(forma_de_pagos.get("valor", 0)),
              float(row.get("precio_pagado", 0)),
              float(row.get("precio_descuento", 0)),
              float(row.get("valorProducto", 0)),

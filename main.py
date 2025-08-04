@@ -64,7 +64,7 @@ def main():
             # proceso encargado de leer la vista (temporal) y cargar el repositorio de datos de tiquetes
             if  proceso_global == 'T' :
                 # clean_data(proceso_global) 
-                pass # process_api(datetime.now())
+                process_api(datetime.now())
                        
             process_customer_data(proceso_global) 
             invoicing_process(proceso_global) # procesa Movimientos
