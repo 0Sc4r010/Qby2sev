@@ -1,10 +1,8 @@
 import argparse
 from datetime import datetime
 from Vista.business_rationale import insertar_encabezado_fc
-from Vista.inventory_transactions import insertar_encabezado_in
-from Vista.accounting_transaction import insertar_encabezado_mc
 from Vista.create_client import procesar_customer_data
-from modelos.data_access import MSSQLConnectionManager, view_invoice_customer_data, view_invoice_data_head,process_tickes,clean_data
+from modelos.data_access import MSSQLConnectionManager, view_invoice_customer_data, view_invoice_data_head,process_view,clean_data
 from modelos.api_total import process_api
 import logging
 
@@ -18,6 +16,7 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 
 proceso_global = ''
+fecha_especifica = datetime(2025, 8, 13, 0, 0, 0)
 
 
 def process_customer_data(proceso):
@@ -63,9 +62,10 @@ def main():
     try:
             # proceso encargado de leer la vista (temporal) y cargar el repositorio de datos de tiquetes
             if  proceso_global == 'T' :
-                # clean_data(proceso_global) 
-                process_api(datetime.now())
-                       
+                clean_data(proceso_global)
+                process_api(fecha_especifica)   # process_api(datetime.now()) 
+                process_view(fecha_especifica)
+                
             process_customer_data(proceso_global) 
             invoicing_process(proceso_global) # procesa Movimientos
            

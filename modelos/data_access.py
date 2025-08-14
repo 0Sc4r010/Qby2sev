@@ -71,6 +71,11 @@ def iif(condicion, valor_si_verdadero, valor_si_falso):
     return valor_si_verdadero if condicion else valor_si_falso
 
 
+def process_view(fecha):
+    query = "exec sp_GetFacturacionElectronica_new @FechaFactura=%s"
+    params = (fecha )
+    return execute_query(query,params,fetch=False)    
+
 def process_tickes(row):
     query = """EXEC sp_InsertarTiquete  @idEmpresa = %s, @idCompra = %s, @idBoleto = %s, @tipoTiquete = %s, @numeroTiquete = %s, 
     @valorTiquete = %s, @precio = %s, @precio_pagado = %s, @precio_descuento = %s,@valorProducto = %s,@fechaDeVenta = %s,
@@ -210,7 +215,7 @@ def find_pettycash(empresa,operacion):
 
 def clean_data(proceso):
     try:
-        sentenc = """ DELETE FROM int_datatickets WHERE est_proc = 0 OR (est_proc = 1 AND fac_fech <= DATEADD(DAY, -3, GETDATE()));"""
+        sentenc = """ DELETE FROM int_datatickets WHERE est_proc = 0;"""
         logger.info("Limpiando datos de la tabla int_datatickets.")
         # Ejecutar la consulta
         result = execute_query(sentenc, fetch=False)
