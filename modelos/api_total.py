@@ -4,7 +4,7 @@ from datetime import datetime
 from requests.auth import HTTPBasicAuth
 import xml.etree.ElementTree as ET
 
-from modelos.data_access import process_tickes
+from modelos.data_access import process_tickes, process_view
 
 
 def process_api(ahora): 
@@ -13,7 +13,7 @@ def process_api(ahora):
     url = "http://integrabolivariano.rjconsultores.com.br/RJIntegra/rest/padrao/tiquetesVendidos"
    
     params = {
-        "idEmpresa": 1,
+        "idEmpresa": 42,
         "fechaInicio": ahora.strftime("%y%m%d") + "0000",
         "fechaFinalizacion": ahora.strftime("%y%m%d") + "2359"
     }
@@ -50,8 +50,10 @@ def process_api(ahora):
         df["fechaDeVenta"] = pd.to_datetime(df["fechaDeVenta"]).dt.date
         print(df.head())
         for _, row in df.iterrows():
+            print(row.get("idEmpresa", 0))
             process_tickes(row)
-      
+        process_view(ahora)
+        
 
         # Si deseas guardar en Excel:
         # df.to_excel("tiquetes_vendidos2.xlsx", index=False)

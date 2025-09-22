@@ -1,5 +1,5 @@
 import argparse
-from datetime import datetime
+from datetime import date
 from Vista.business_rationale import insertar_encabezado_fc
 from Vista.create_client import procesar_customer_data
 from modelos.data_access import MSSQLConnectionManager, view_invoice_customer_data, view_invoice_data_head,process_view,clean_data
@@ -16,8 +16,8 @@ logging.basicConfig(level=logging.INFO,
 logger = logging.getLogger(__name__)
 
 proceso_global = ''
-fecha_especifica = datetime(2025, 8, 13, 0, 0, 0)
-
+# fecha_especifica = datetime(2025, 9, 19, 0, 0, 0)  -- para efectos de pruebas
+fecha_especifica = date.today
 
 def process_customer_data(proceso):
     try:
@@ -52,7 +52,6 @@ def main():
     specified process type, and handles exceptions.
     """
     parser = argparse.ArgumentParser(description='Integracion Estaciones, Tiquetes a seven')
-    # Agregar argumentos
     parser.add_argument('--proceso', type=str, default='T',help='Nombre del proceso [T]iquetes [R] Reproceso')
     
     # Parsear los argumentos
@@ -64,8 +63,7 @@ def main():
             if  proceso_global == 'T' :
                 clean_data(proceso_global)
                 process_api(fecha_especifica)   # process_api(datetime.now()) 
-                process_view(fecha_especifica)
-                
+       
             process_customer_data(proceso_global) 
             invoicing_process(proceso_global) # procesa Movimientos
            
@@ -73,7 +71,6 @@ def main():
         print(f"An unexpected error occurred: {e}")
     
     MSSQLConnectionManager.close_connection()    
-  
   
 if __name__ == "__main__":
     main()

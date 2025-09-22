@@ -74,7 +74,7 @@ def iif(condicion, valor_si_verdadero, valor_si_falso):
 def process_view(fecha):
     query = "exec sp_GetFacturacionElectronica_new @FechaFactura=%s"
     params = (fecha )
-    return execute_query(query,params,fetch=False)    
+    return execute_query(query,params)    
 
 def process_tickes(row):
     query = """EXEC sp_InsertarTiquete  @idEmpresa = %s, @idCompra = %s, @idBoleto = %s, @tipoTiquete = %s, @numeroTiquete = %s, 
